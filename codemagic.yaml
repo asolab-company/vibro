@@ -5,7 +5,7 @@ workflows:
       xcode: 16.4
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: vibromate
+        bundle_identifier: com.vibrovibe.app
       groups:
         - VibroMate
     scripts:
@@ -18,7 +18,7 @@ workflows:
       - name: Fetch signing files
         script: |
           app-store-connect fetch-signing-files \
-            "vibromate" \
+            "com.vibrovibe.app" \
             --type IOS_APP_STORE \
             --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
             --key-id "$APP_STORE_CONNECT_KEY_ID" \
