@@ -30,11 +30,11 @@ struct Main: View {
         .fullScreenCover(isPresented: $overlay.isOverlayVisible) {
             PayWall()
         }
-        .onAppear {
-            if !iap.isSubscribed {
-                overlay.isOverlayVisible = true
-            }
-        }
+//        .onAppear {
+//            if !iap.isSubscribed {
+//                overlay.isOverlayVisible = true
+//            }
+//        }
     }
 }
 
