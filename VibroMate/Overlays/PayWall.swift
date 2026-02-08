@@ -12,7 +12,6 @@ struct PayWall: View {
     @State private var currentTab = 0
 
     @State private var selectedPlan: PlanType = .weekly
-    @State private var isTrialEnabled: Bool = true
 
 
     @State private var didTrackShownOnce = false
@@ -49,7 +48,7 @@ struct PayWall: View {
                     .padding(.top, height * 0.05)
 
                 VStack {
-                    VStack(spacing: height * 0.015) {
+                    VStack(spacing: 20) {
 
                         HStack {
                             Button {
@@ -100,61 +99,6 @@ struct PayWall: View {
                         .cornerRadius(24)
                         .frame(maxWidth: .infinity)
 
-                        HStack {
-                            Text("Free Trial Enabled")
-                                .foregroundColor(
-                                    selectedPlan == .weekly
-                                        ? .black : Color.init(hex: "AC57A7")
-                                )
-                                .font(.custom("SFProDisplay-Medium", size: 15))
-                                .dynamicTypeSize(.medium ... .xxLarge)
-
-                            Spacer()
-
-                            Toggle("", isOn: $isTrialEnabled)
-                                .labelsHidden()
-                                .tint(Color(hex: "#419400"))
-                                .onChange(of: isTrialEnabled) { newValue in
-                                    trackTap(newValue ? "pw_trial_on" : "pw_trial_off", plan: selectedPlan)
-
-                                    if newValue {
-                                        selectedPlan = .weekly
-                                    } else {
-                                        selectedPlan = .yearly
-                                    }
-
-                                    trackPlanChangeIfNeeded(source: "toggle")
-                                }
-                        }
-                        .padding(.horizontal, 30)
-                        .padding(.vertical, 10)
-                        .background(
-                            RoundedRectangle(cornerRadius: 50)
-                                .fill(
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [
-                                            Color(hex: "#A75AAC"),
-                                            Color(hex: "#D0437D"),
-                                        ]),
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    ).opacity(0.22)
-                                )
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 50)
-                                        .stroke(
-                                            LinearGradient(
-                                                gradient: Gradient(colors: [
-                                                    Color(hex: "#A75AAC"),
-                                                    Color(hex: "#D0437D"),
-                                                ]),
-                                                startPoint: .leading,
-                                                endPoint: .trailing
-                                            ),
-                                            lineWidth: 1.5
-                                        )
-                                )
-                        )
 
                         PlanCard(
                             title: weeklyTitle(),
@@ -164,7 +108,6 @@ struct PayWall: View {
                             planType: .weekly
                         ) {
                             selectedPlan = .weekly
-                            isTrialEnabled = true
                             trackTap("pw_plan_card_tap", plan: .weekly)
                             trackPlanChangeIfNeeded(source: "card")
                         }
@@ -178,7 +121,6 @@ struct PayWall: View {
                             planType: .yearly
                         ) {
                             selectedPlan = .yearly
-                            isTrialEnabled = false
                             trackTap("pw_plan_card_tap", plan: .yearly)
                             trackPlanChangeIfNeeded(source: "card")
                         }
@@ -257,12 +199,9 @@ struct PayWall: View {
                                 .scaledToFit()
                                 .frame(width: 22, height: 22)
 
-                            Text(
-                                isTrialEnabled
-                                    ? "No Payment Now" : "Cancel Anytime"
-                            )
-                            .font(.custom("SFProDisplay-Bold", size: 13))
-                            .foregroundColor(Color(hex: "#AC57A7"))
+                            Text("Cancel Anytime")
+                                .font(.custom("SFProDisplay-Bold", size: 13))
+                                .foregroundColor(Color(hex: "#AC57A7"))
                         }
 
                         HStack(spacing: 40) {
@@ -348,7 +287,7 @@ struct PayWall: View {
         guard !didTrackShownOnce else { return }
         didTrackShownOnce = true
         lastTrackedPlan = selectedPlan
-        trackTap("pw_shown", plan: selectedPlan, extra: isTrialEnabled ? "trial_on" : "trial_off")
+        trackTap("pw_shown", plan: selectedPlan)
     }
 
     private func trackPlanChangeIfNeeded(source: String) {
@@ -367,27 +306,15 @@ struct PayWall: View {
     }
 
     private func weeklyTitle() -> String {
-        if let offer = weeklyProduct()?.subscription?.introductoryOffer,
-           offer.type == .introductory, offer.price == 0 {
-            return "3–Days Free Trial"
-        }
         return "Weekly Access"
     }
 
     private func weeklySubtitle() -> String {
         guard let product = weeklyProduct() else { return "$4.99 / week" }
-        if let offer = product.subscription?.introductoryOffer,
-           offer.type == .introductory, offer.price == 0 {
-            return "then \(product.displayPrice) / week"
-        }
         return "\(product.displayPrice) / week"
     }
 
     private func weeklyBadge() -> String {
-        if let offer = weeklyProduct()?.subscription?.introductoryOffer,
-           offer.type == .introductory, offer.price == 0 {
-            return introBadge(from: offer.period) ?? "FREE TRIAL"
-        }
         return "POPULAR"
     }
 
@@ -521,5 +448,5 @@ struct PlanCard: View {
 
 #Preview {
     PayWall()
-        .environmentObject(IAPManager.shared) 
+        .environmentObject(IAPManager.shared)
 }
