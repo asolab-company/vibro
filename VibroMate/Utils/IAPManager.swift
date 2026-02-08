@@ -1,6 +1,8 @@
 import Foundation
 import StoreKit
 
+private let webSubscriptionActiveKey = "web_subscription_active"
+
 @MainActor
 final class IAPManager: NSObject, ObservableObject {
     static let shared = IAPManager()
@@ -19,6 +21,12 @@ final class IAPManager: NSObject, ObservableObject {
             await fetchProducts()
             await refreshEntitlements()
         }
+    }
+
+    /// Подписка оформлена через веб — не учитываем StoreKit для доступа.
+    func setWebSubscriptionActive(_ active: Bool) {
+        UserDefaults.standard.set(active, forKey: webSubscriptionActiveKey)
+        Task { await refreshEntitlements() }
     }
 
  
@@ -75,6 +83,11 @@ final class IAPManager: NSObject, ObservableObject {
 
  
     func refreshEntitlements() async {
+        if UserDefaults.standard.bool(forKey: webSubscriptionActiveKey) {
+            isSubscribed = true
+            purchasedProductIDs = []
+            return
+        }
         var owned = Set<String>()
         for await entitlement in Transaction.currentEntitlements {
             if case .verified(let tx) = entitlement {
