@@ -32,13 +32,13 @@ workflows:
 
       - name: Apply provisioning to project
         script: |
-          xcode-project use-profiles --project "VibroMate.xcodeproj"
+          xcode-project use-profiles --project "WaveVibro.xcodeproj"
 
       - name: Build iOS ipa
         script: |
           xcode-project build-ipa \
-            --project "VibroMate.xcodeproj" \
-            --scheme "VibroMate" \
+            --project "WaveVibro.xcodeproj" \
+            --scheme "WaveVibro" \
             --config Release
 
     artifacts:
