@@ -275,7 +275,7 @@
 				CODE_SIGN_ENTITLEMENTS = WaveVibro/WaveVibro.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -320,7 +320,7 @@
 				CODE_SIGN_ENTITLEMENTS = WaveVibro/WaveVibro.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -393,8 +393,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apphud/ApphudSDK";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.2;
+				kind = exactVersion;
+				version = 4.0.4;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
